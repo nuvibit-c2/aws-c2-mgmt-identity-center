@@ -81,7 +81,7 @@ locals {
 
   # account assignments can be done for individual accounts or an account map can be used for dynamic assigments
   sso_account_assignments = [
-    for account in []:
+    for account in [] :
     {
       account_name = account.account_name
       account_id   = account.account_id
