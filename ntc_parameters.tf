@@ -15,7 +15,8 @@ locals {
 # ¦ NTC PARAMETERS - READER
 # ---------------------------------------------------------------------------------------------------------------------
 module "ntc_parameters_reader" {
-  source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-parameters//modules/reader?ref=1.0.0"
+  # source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-parameters//modules/reader?ref=1.0.0"
+  source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-parameters//modules/reader?ref=feat-account-map"
 
   bucket_name = local.ntc_parameters_bucket_name
 
