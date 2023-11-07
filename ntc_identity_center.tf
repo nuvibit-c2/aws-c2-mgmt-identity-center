@@ -14,17 +14,27 @@ locals {
       "sg-aws-c2-support"
     ]
   }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# ¦ NTC IDENTITY CENTER - SSO
+# ---------------------------------------------------------------------------------------------------------------------
+module "identity_center" {
+  source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-identity-center?ref=1.0.1"
+
+  is_automatic_provisioning_enabled = false
 
   # users that should be manually provisioned in IAM Identity Center via Terraform. Automatic provisioning must be disabled.
   # Users will not be synced back to external identitiy provider!
-  sso_users = jsondecode(file("${path.module}/sso_users.json"))
+  manual_provisioning_sso_users = jsondecode(file("${path.module}/sso_users.json"))
 
   # groups that should be manually provisioned in IAM Identity Center via Terraform. Automatic provisioning must be disabled.
   # Groups will not be synced back to external identitiy provider!
-  sso_groups = jsondecode(file("${path.module}/sso_groups.json"))
+  manual_provisioning_sso_groups = jsondecode(file("${path.module}/sso_groups.json"))
 
-  # permissions sets which can be referenced for account assignments
-  sso_permission_sets = [
+  # permission sets can be a combination of aws and customer managed policies
+  # https://docs.aws.amazon.com/singlesignon/latest/userguide/permissionsetcustom.html
+  permission_sets = [
     {
       name : "AdministratorAccess"
       description : "This permission set grants administrator access"
@@ -79,8 +89,7 @@ locals {
     }
   ]
 
-  # account assignments can be done for individual accounts or an account map can be used for dynamic assigments
-  sso_account_assignments = [
+  account_assignments = [
     for account in module.ntc_parameters_reader.account_map :
     {
       account_name = account.account_name
@@ -110,19 +119,6 @@ locals {
       ]
     }
   ]
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# ¦ NTC IDENTITY CENTER - SSO
-# ---------------------------------------------------------------------------------------------------------------------
-module "identity_center" {
-  source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-identity-center?ref=1.0.1"
-
-  is_automatic_provisioning_enabled = false
-  manual_provisioning_sso_users     = local.sso_users
-  manual_provisioning_sso_groups    = local.sso_groups
-  permission_sets                   = local.sso_permission_sets
-  account_assignments               = local.sso_account_assignments
 
   providers = {
     aws = aws.euc1
