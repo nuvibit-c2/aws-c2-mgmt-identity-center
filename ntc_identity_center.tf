@@ -97,22 +97,22 @@ module "identity_center" {
       permissions = [
         {
           permission_set_name : "AdministratorAccess"
-          # combine global sso permissions and sso permissions from account map
-          groups : concat(local.global_sso_permissions.admin_groups, account.customer_values.sso_admin_groups)
+          # e.g. combine global sso permissions with sso permissions from account map
+          groups : concat(local.global_sso_permissions.admin_groups, try(account.customer_values.sso_admin_groups, []))
           # alternatively groups can also be dynamically associated via predefined naming
           # groups : ["sg-aws-admin-${account.account_id}"]
         },
         {
           permission_set_name : "Billing+ViewOnlyAccess"
-          # combine global sso permissions and sso permissions from account map
-          groups : concat(local.global_sso_permissions.billing_groups, account.customer_values.sso_billing_groups)
+          # e.g. combine global sso permissions with sso permissions from account map
+          groups : concat(local.global_sso_permissions.billing_groups, try(account.customer_values.sso_billing_groups, []))
           # alternatively groups can also be dynamically associated via predefined naming
           # groups : ["sg-aws-billing-${account.account_id}"]
         },
         {
           permission_set_name : "SupportUser+ReadOnlyAccess"
-          # combine global sso permissions and sso permissions from account map
-          groups : concat(local.global_sso_permissions.support_groups, account.customer_values.sso_support_groups)
+          # e.g. combine global sso permissions with sso permissions from account map
+          groups : concat(local.global_sso_permissions.support_groups, try(account.customer_values.sso_support_groups, []))
           # alternatively groups can also be dynamically associated via predefined naming
           # groups : ["sg-aws-support-${account.account_id}"]
         }
