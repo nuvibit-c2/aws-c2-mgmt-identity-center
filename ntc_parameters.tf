@@ -1,6 +1,6 @@
 locals {
   ntc_parameters_bucket_name = "aws-c2-ntc-parameters"
-  ntc_parameters_writer_node = "identity-center"
+  ntc_parameters_writer_node = "mgmt-identity-center"
 
   ntc_parameters_to_write = {}
 
