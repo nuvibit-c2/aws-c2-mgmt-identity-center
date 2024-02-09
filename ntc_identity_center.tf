@@ -5,13 +5,13 @@ locals {
   # users and groups with global permissions for all accounts
   global_sso_permissions = {
     admin_groups = [
-      "sg-aws-c2-admin"
+      "aws-c2-admin"
     ]
     billing_groups = [
-      "sg-aws-c2-billing"
+      "aws-c2-billing"
     ]
     support_groups = [
-      "sg-aws-c2-support"
+      "aws-c2-support"
     ]
   }
 }
