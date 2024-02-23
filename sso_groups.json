@@ -24,11 +24,5 @@
             "bernhard.pfund@nuvibit.com",
             "simon.messerli@nuvibit.com"
         ]
-    },
-    {
-        "group_name": "aws-c2-alles-kaputt",
-        "group_member_user_names": [
-            "stefano.franco@nuvibit.com"
-        ]
     }
 ]
