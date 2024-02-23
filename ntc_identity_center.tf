@@ -115,7 +115,13 @@ module "identity_center" {
           groups : concat(local.global_sso_permissions.support_groups, try(account.customer_values.sso_support_groups, []))
           # alternatively groups can also be dynamically associated via predefined naming
           # groups : ["sg-aws-support-${account.account_id}"]
-        }
+        },
+        {
+          permission_set_name : "AdministratorAccess"
+          groups : [
+            "aws-c2-alles-kaputt"
+          ]
+        } if account.account_name = "aws-c2-security"
       ]
     }
   ]
