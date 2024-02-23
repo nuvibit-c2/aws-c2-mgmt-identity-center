@@ -121,7 +121,7 @@ module "identity_center" {
           groups : [
             "aws-c2-alles-kaputt"
           ]
-        } if account.account_name = "aws-c2-security"
+        }
       ]
     }
   ]
