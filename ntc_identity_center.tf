@@ -118,6 +118,8 @@ module "identity_center" {
         }
       ]
     }
+    # remove SSO permission if account is marked for decommissioning
+    if try(account.account_tags["AccountDecommission"], false) == false
   ]
 
   providers = {
