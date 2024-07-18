@@ -19,7 +19,7 @@ locals {
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ NTC IDENTITY CENTER - SSO
 # ---------------------------------------------------------------------------------------------------------------------
-module "identity_center" {
+module "ntc_identity_center" {
   source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-identity-center?ref=1.0.4"
 
   is_automatic_provisioning_enabled = false
@@ -125,4 +125,9 @@ module "identity_center" {
   providers = {
     aws = aws.euc1
   }
+}
+
+moved {
+  from = module.identity_center
+  to = module.ntc_identity_center
 }
