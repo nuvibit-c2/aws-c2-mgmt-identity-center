@@ -126,8 +126,3 @@ module "ntc_identity_center" {
     aws = aws.euc1
   }
 }
-
-moved {
-  from = module.identity_center
-  to = module.ntc_identity_center
-}
