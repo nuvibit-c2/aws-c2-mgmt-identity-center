@@ -40,5 +40,11 @@
         "primary_email": "simon.messerli@nuvibit.com",
         "first_name": "Simon",
         "last_name": "Messerli"
+    },
+    {
+        "user_name": "phil.wegmueller@nuvibit.com",
+        "primary_email": "phil.wegmueller@nuvibit.com",
+        "first_name": "Phil",
+        "last_name": "Wegmueller"
     }
 ]
