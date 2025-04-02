@@ -46,5 +46,17 @@
         "primary_email": "phil.wegmueller@nuvibit.com",
         "first_name": "Phil",
         "last_name": "Wegmueller"
+    },
+    {
+        "user_name": "balazs.buri@nuvibit.com",
+        "primary_email": "balazs.buri@nuvibit.com",
+        "first_name": "Balázs",
+        "last_name": "Buri"
+    },
+    {
+        "user_name": "dimitris.prasakis@nuvibit.com",
+        "primary_email": "dimitris.prasakis@nuvibit.com",
+        "first_name": "Dimitris",
+        "last_name": "Prasakis"
     }
 ]
