@@ -82,15 +82,15 @@ module "ntc_identity_center" {
       permissions = [
         {
           permission_set_name : "AdministratorAccess"
-          groups : "aws-c2-admins"
+          groups : ["aws-c2-admins"]
         },
         {
           permission_set_name : "Billing+ViewOnlyAccess"
-          groups : "aws-c2-finops"
+          groups : ["aws-c2-finops"]
         },
         {
           permission_set_name : "SupportUser+ReadOnlyAccess"
-          groups : "aws-c2-devops"
+          groups : ["aws-c2-devops"]
         }
       ]
     }
