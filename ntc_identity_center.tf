@@ -1,36 +1,21 @@
 # ---------------------------------------------------------------------------------------------------------------------
-# ¦ LOCALS
-# ---------------------------------------------------------------------------------------------------------------------
-locals {
-  # users and groups with global permissions for all accounts
-  global_sso_permissions = {
-    admin_groups = [
-      "aws-c2-admin"
-    ]
-    billing_groups = [
-      "aws-c2-billing"
-    ]
-    support_groups = [
-      "aws-c2-support"
-    ]
-  }
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
 # ¦ NTC IDENTITY CENTER - SSO
 # ---------------------------------------------------------------------------------------------------------------------
 module "ntc_identity_center" {
   source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-identity-center?ref=1.0.4"
 
-  is_automatic_provisioning_enabled = false
+  # SCIM automatic provisioning is the recommended way to provision users and groups in IAM Identity Center.
+  # Users and Groups will be synced from the external identity provider to IAM Identity Center.
+  # WARNING: 'account_assignments' can only be used for users and groups that are successfully provisioned via SCIM.
+  is_automatic_provisioning_enabled = true
 
   # users that should be manually provisioned in IAM Identity Center via Terraform. Automatic provisioning must be disabled.
   # Users will not be synced back to external identitiy provider!
-  manual_provisioning_sso_users = jsondecode(file("${path.module}/sso_users.json"))
+  # manual_provisioning_sso_users = jsondecode(file("${path.module}/sso_users.json"))
 
   # groups that should be manually provisioned in IAM Identity Center via Terraform. Automatic provisioning must be disabled.
   # Groups will not be synced back to external identitiy provider!
-  manual_provisioning_sso_groups = jsondecode(file("${path.module}/sso_groups.json"))
+  # manual_provisioning_sso_groups = jsondecode(file("${path.module}/sso_groups.json"))
 
   # permission sets can be a combination of aws and customer managed policies
   # https://docs.aws.amazon.com/singlesignon/latest/userguide/permissionsetcustom.html
@@ -97,24 +82,15 @@ module "ntc_identity_center" {
       permissions = [
         {
           permission_set_name : "AdministratorAccess"
-          # e.g. combine global sso permissions with sso permissions from account map
-          groups : concat(local.global_sso_permissions.admin_groups, try(account.customer_values.sso_admin_groups, []))
-          # alternatively groups can also be dynamically associated via predefined naming
-          # groups : ["sg-aws-admin-${account.account_id}"]
+          groups : "aws-c2-admins"
         },
         {
           permission_set_name : "Billing+ViewOnlyAccess"
-          # e.g. combine global sso permissions with sso permissions from account map
-          groups : concat(local.global_sso_permissions.billing_groups, try(account.customer_values.sso_billing_groups, []))
-          # alternatively groups can also be dynamically associated via predefined naming
-          # groups : ["sg-aws-billing-${account.account_id}"]
+          groups : "aws-c2-finops"
         },
         {
           permission_set_name : "SupportUser+ReadOnlyAccess"
-          # e.g. combine global sso permissions with sso permissions from account map
-          groups : concat(local.global_sso_permissions.support_groups, try(account.customer_values.sso_support_groups, []))
-          # alternatively groups can also be dynamically associated via predefined naming
-          # groups : ["sg-aws-support-${account.account_id}"]
+          groups : "aws-c2-devops"
         }
       ]
     }
