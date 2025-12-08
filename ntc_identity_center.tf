@@ -353,7 +353,7 @@ module "ntc_identity_center" {
     # Filter condition: Exclude accounts marked for decommissioning
     # This automatically removes SSO access when accounts are scheduled for deletion
     if try(account.account_tags["AccountDecommission"], false) == false
-    
+
     # Additional filter examples:
     # Only production accounts: if contains(account.ou_path, "/prod")
     # Only specific OU: if account.ou_path == "/root/workloads/prod"

@@ -36,10 +36,20 @@
 # LOCAL VARIABLES - IDENTITY CENTER PARAMETERS
 # ---------------------------------------------------------------------------------------------------------------------
 locals {
-  # S3 bucket name for centralized parameter storage (created by mgmt-organizations)
+  # -------------------------------------------------------------------------------------------------------------------
+  # S3 Bucket Name
+  # -------------------------------------------------------------------------------------------------------------------
+  # Centralized parameter storage bucket (created by mgmt-organizations)
+  # ⚠️  Must match the bucket name across all accounts in the organization
+  # -------------------------------------------------------------------------------------------------------------------
   ntc_parameters_bucket_name = "aws-c2-ntc-parameters"
 
-  # This account's parameter node name (namespace: mgmt-identity-center)
+  # -------------------------------------------------------------------------------------------------------------------
+  # Parameter Node Name
+  # -------------------------------------------------------------------------------------------------------------------
+  # This account's namespace in the parameter bucket
+  # Convention: <account-type>-<account-purpose>
+  # -------------------------------------------------------------------------------------------------------------------
   ntc_parameters_writer_node = "mgmt-identity-center"
 
   # -----------------------------------------------------
@@ -95,11 +105,11 @@ locals {
 # Access organization ID:
 #   local.ntc_parameters["mgmt-organizations"]["org_id"]
 #
-# Access account map for SSO assignments:
-#   local.ntc_parameters["mgmt-account-factory"]["account_map"]
+# Access Transit Gateway ID from connectivity account:
+#   local.ntc_parameters["connectivity"]["transit_gateway_id"]
 #
 # Access core account IDs:
-#   local.ntc_parameters["mgmt-account-factory"]["core_accounts"]["security"]
+#   local.ntc_parameters["mgmt-account-factory"]["core_accounts"]["INSERT_ACCOUNT_NAME"]
 # =====================================================================================================================
 module "ntc_parameters_reader" {
   source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-parameters//modules/reader?ref=1.1.4"
@@ -164,7 +174,7 @@ module "ntc_parameters_reader" {
 module "ntc_parameters_writer" {
   source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-parameters//modules/writer?ref=1.1.4"
 
-  bucket_name        = local.ntc_parameters_bucket_name
+  bucket_name        = local.ntc_parameters_bucket_name # S3 bucket for parameter storage
   parameter_node     = local.ntc_parameters_writer_node # Namespace: mgmt-identity-center
   node_parameters    = local.ntc_parameters_to_write    # Currently empty (no exports)
   replace_parameters = true                             # Always replace (prevent drift)
