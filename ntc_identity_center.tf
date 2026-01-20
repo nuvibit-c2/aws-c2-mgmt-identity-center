@@ -125,7 +125,9 @@
 # ¦ NTC IDENTITY CENTER - SSO CONFIGURATION
 # ---------------------------------------------------------------------------------------------------------------------
 module "ntc_identity_center" {
-  source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-identity-center?ref=1.0.4"
+  source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-identity-center?ref=2.0.0"
+
+  region = "eu-central-1"
 
   # ===================================================================================================================
   # PROVISIONING MODE CONFIGURATION
@@ -359,10 +361,6 @@ module "ntc_identity_center" {
     # Only specific OU: if account.ou_path == "/root/workloads/prod"
     # Only active accounts: if account.status == "ACTIVE"
   ]
-
-  providers = {
-    aws = aws.euc1
-  }
 }
 
 # =====================================================================================================================
