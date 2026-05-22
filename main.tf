@@ -36,5 +36,7 @@ locals {
   default_tags = {
     ManagedBy     = "OpenTofu"
     ProvisionedBy = "aws-c2-mgmt-identity-center"
+    # aws product tag
+    aws-apn-id = "pc:c1ztn0gbrzi3judwmfx1lrq1t"
   }
 }
