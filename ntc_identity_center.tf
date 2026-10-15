@@ -205,6 +205,7 @@ module "ntc_identity_center" {
       name : "AdministratorAccess"
       description : "This permission set grants administrator access"
       session_duration : 2
+      relay_state : "https://eu-central-1.console.aws.amazon.com/console/home?region=eu-central-1#"
       inline_policy_json : ""
       managed_policies : [
         {

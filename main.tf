@@ -3,6 +3,7 @@
 # ---------------------------------------------------------------------------------------------------------------------
 provider "aws" {
   region = "eu-central-1"
+
   default_tags {
     tags = local.default_tags
   }
@@ -12,7 +13,7 @@ provider "aws" {
 # ¦ REQUIREMENTS
 # ---------------------------------------------------------------------------------------------------------------------
 terraform {
-  required_version = ">= 1.3.0"
+  required_version = ">= 1.5.7"
 
   required_providers {
     aws = {
@@ -33,6 +34,7 @@ data "aws_caller_identity" "current" {}
 # ¦ LOCALS
 # ---------------------------------------------------------------------------------------------------------------------
 locals {
+  # default tags are applied to all resources the provider creates
   default_tags = {
     ManagedBy     = "OpenTofu"
     ProvisionedBy = "aws-c2-mgmt-identity-center"
