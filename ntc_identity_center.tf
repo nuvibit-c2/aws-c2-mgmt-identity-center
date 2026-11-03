@@ -125,9 +125,34 @@
 # ¦ NTC IDENTITY CENTER - SSO CONFIGURATION
 # ---------------------------------------------------------------------------------------------------------------------
 module "ntc_identity_center" {
-  source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-identity-center?ref=2.1.1"
+  source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-identity-center?ref=2.2.0"
 
+  # primary region of identity center - all administration happens here
   region = "eu-central-1"
+
+  # ===================================================================================================================
+  # ENCRYPTION AT REST & MULTI-REGION CONFIGURATION
+  # ===================================================================================================================
+  # enable_encryption_at_rest: creates a multi-region kms key and switches identity center to it (via lambda)
+  #   - false switches identity center back to an aws owned key and schedules the kms key for deletion (7 days)
+  #   - prerequisite for replication_config
+  #
+  # replication_config: replicates identity center to up to 5 replica regions (region_1 to region_5)
+  #   - each slot creates a replica kms key and adds the region, slots are processed sequentially
+  #   - administration (permission sets, assignments) always remains in the primary region
+  #   - requires enable_encryption_at_rest = true, remove all regions before disabling encryption at rest
+  #   - do not move a region to another slot (removes and adds the region again)
+  #   - a removed region can only be added again after the replica kms key deletion window (7 days) has passed
+  #
+  # ⚠️  IMPORTANT: all AWS managed applications in use with identity center must support a customer managed kms key
+  # ⚠️  IMPORTANT: opt-in regions (e.g. eu-central-2) must be enabled in the management account
+  # ===================================================================================================================
+  enable_encryption_at_rest = true
+
+  # replication is not enabled yet - uncomment to replicate identity center to additional regions
+  # replication_config = {
+  #   region_1 = "eu-central-2"
+  # }
 
   # ===================================================================================================================
   # PROVISIONING MODE CONFIGURATION
