@@ -278,6 +278,44 @@ module "ntc_identity_center" {
         }
       ]
       boundary_policy : {}
+    },
+    {
+      # just-in-time admin access to the management account
+      # assigned to an entra id group which is empty by default, members are only added temporarily
+      name : "AdministratorAccess-jit"
+      description : "This permission set grants just-in-time administrator access"
+      session_duration : 1
+      relay_state : "https://eu-central-1.console.aws.amazon.com/console/home?region=eu-central-1#"
+      inline_policy_json : ""
+      managed_policies : [
+        {
+          managed_by : "aws"
+          policy_name : "AdministratorAccess"
+          policy_path : "/"
+        }
+      ]
+      boundary_policy : {}
+    },
+    {
+      # operational access: more than read-only + support, less than PowerUserAccess
+      # "SystemAdministrator" covers day-to-day operations (e.g. EC2, RDS, CloudWatch, SSM) without IAM administration
+      name : "OperatorAccess"
+      description : "This permission set grants operational and read-only access"
+      session_duration : 8
+      inline_policy_json : ""
+      managed_policies : [
+        {
+          managed_by : "aws"
+          policy_name : "SystemAdministrator"
+          policy_path : "/job-function/"
+        },
+        {
+          managed_by : "aws"
+          policy_name : "ReadOnlyAccess"
+          policy_path : "/"
+        }
+      ]
+      boundary_policy : {}
     }
   ]
 
@@ -357,26 +395,39 @@ module "ntc_identity_center" {
     {
       account_name = account.account_name
       account_id   = account.account_id
-      permissions = [
-        {
-          permission_set_name : "AdministratorAccess"
-          # Global permission: All accounts get aws-c2-admins group
-          # Can be extended with account-specific groups from account metadata
-          groups : ["aws-c2-admins"]
-          # Example combining global + account-specific permissions:
-          # groups : concat(["aws-c2-admins"], try(account.customer_values.sso_admin_groups, []))
-        },
-        {
-          permission_set_name : "Billing+ViewOnlyAccess"
-          groups : ["aws-c2-finops"]
-          # Example account-specific permissions only:
-          # groups : try(account.customer_values.sso_billing_groups, [])
-        },
-        {
-          permission_set_name : "SupportUser+ReadOnlyAccess"
-          groups : ["aws-c2-devops"]
-        }
-      ]
+      permissions = concat(
+        [
+          {
+            permission_set_name : "AdministratorAccess"
+            # Global permission: All accounts get aws-c2-admins group
+            # Can be extended with account-specific groups from account metadata
+            groups : ["aws-c2-admins"]
+            # Example combining global + account-specific permissions:
+            # groups : concat(["aws-c2-admins"], try(account.customer_values.sso_admin_groups, []))
+          },
+          {
+            permission_set_name : "Billing+ViewOnlyAccess"
+            groups : ["aws-c2-finops"]
+            # Example account-specific permissions only:
+            # groups : try(account.customer_values.sso_billing_groups, [])
+          },
+          {
+            permission_set_name : "SupportUser+ReadOnlyAccess"
+            groups : ["aws-c2-devops"]
+          },
+          {
+            permission_set_name : "OperatorAccess"
+            groups : ["aws-c2-devops"]
+          }
+        ],
+        # just-in-time admin access only for the management account
+        account.account_name == "aws-c2-management" ? [
+          {
+            permission_set_name : "AdministratorAccess-jit"
+            groups : ["aws-c2-admins-jit"]
+          }
+        ] : []
+      )
     }
     # Filter condition: Exclude accounts marked for decommissioning
     # This automatically removes SSO access when accounts are scheduled for deletion
