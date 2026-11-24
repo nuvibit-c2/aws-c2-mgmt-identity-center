@@ -125,7 +125,7 @@
 # ¦ NTC IDENTITY CENTER - SSO CONFIGURATION
 # ---------------------------------------------------------------------------------------------------------------------
 module "ntc_identity_center" {
-  source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-identity-center?ref=2.2.0"
+  source = "github.com/nuvibit-terraform-collection/terraform-aws-ntc-identity-center?ref=2.2.2"
 
   # primary region of identity center - all administration happens here
   region = "eu-central-1"
